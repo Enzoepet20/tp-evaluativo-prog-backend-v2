@@ -40,7 +40,7 @@ const validateProfileImage = body('profileImage')
     });
 //router para las vistas
 router.get('/', authController.isAuthenticated, authController.show, (req, res) => {
-    res.render('index', { user: req.user, users: req.users });
+    res.render('index', { user: req.user, users: req.users, pagos: req.pagos, pago: req.pago });
 });
 
 router.get('/register', (req, res)=>{

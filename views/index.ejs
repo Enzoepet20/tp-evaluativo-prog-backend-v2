@@ -69,44 +69,31 @@
       </div> 
 
       <!-- Sección para mostrar la lista de usuarios -->
-      <h3>Lista de Usuarios</h3>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Perfil</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (users && users.length > 0) { %>
-            <% users.forEach((usuario, index) => { %>
-              <tr>
-                <td><%= index + 1 %></td>
-                <td><%= usuario.name %></td>
-                <td><%= usuario.correo %></td>
-                <td>
-                  <img src="..<%= usuario.profile_image %>" alt="Imagen de perfil" style="max-width: 50px; border-radius: 50%;">
-                </td>
-                <td>
-                  <a href="/edit/<%= usuario.id %>" class="btn btn-warning">Editar</a>
-                  <form action="/delete/<%= usuario.id %>" method="POST" style="display:inline;">
-                    <button type="submit" class="btn btn-danger">Borrar</button>
-                  </form>
-                </td>
-              </tr>
-            <% }) %>
-          <% } else { %>
-            <tr>
-              <td colspan="4">No hay usuarios registrados.</td>
-            </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </main>
-  </div>
-</div>
+<H3>LISTA DE PAGOS</H3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Monto</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Id Usuario</th>
+      <th scope="col">Recibo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pagos.forEach(pago => { %>
+      <tr>
+        <td><%= pago.id %></td>
+        <td><%= pago.amount %></td>
+        <td><%= pago.date %></td>
+        <td><%= pago.userId %></td>
+        <td>
+          <a href="/descargar-recibo/<%= pago.id %>" class="btn btn-primary">Descargar Recibo</a> <!-- Botón de descarga -->
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
 
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>

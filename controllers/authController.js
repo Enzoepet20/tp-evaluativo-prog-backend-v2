@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const User = require('../models/User'); // Importa tu modelo de Sequelize
+const Recibo = require('../models/Recibo'); // Importa tu modelo de Sequelize}
+const Pago = require('../models/Pago'); // Importa tu modelo de Sequelize}
 const { promisify } = require('util');
 const e = require('express');
 
@@ -46,11 +48,15 @@ exports.show = async (req, res, next) => {
         const users = await User.findAll({
             attributes: ['id', 'user', 'name', 'correo', 'profile_image']
         });
-
+        const pagos = await Pago.findAll({
+            attributes: ['id', 'amount', 'date', 'userId']
+        });
         res.render('index', {
             user: { id, user, name, profile_image },
-            users: users
+            users: users,
+            pagos: pagos,
         });
+
     } catch (error) {
         console.log(error);
         res.status(500).send('Error al cargar la página principal');
