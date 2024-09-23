@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Pago</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Registrar Pago</h2>
+        
+        <!-- Mostrar mensajes de éxito o error -->
+        <% if (typeof message !== 'undefined') { %>
+            <div class="alert <%= message.includes('éxito') ? 'alert-success' : 'alert-danger' %>">
+                <%= message %>
+            </div>
+        <% } %>
+
+        <form action="/pagos/registrar" method="POST">
+            <div class="form-group">
+                <label for="amount">Monto del Pago:</label>
+                <input type="number" step="0.01" min="0" id="amount" name="amount" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Fecha del Pago:</label>
+                <input type="date" id="date" name="date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="userId">Id del usuario correspondiente</label>
+                <input type="text" id="userId" name="userId" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar Pago</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -11,6 +11,9 @@ const JWT_SECRETO = 'super_secret';
 const JWT_TIEMPO_EXPIRA = '7d';
 const JWT_COOKIE_EXPIRES = 90; // En días
 
+
+
+
 // Middleware para verificar si el usuario está autenticado
 // Middleware para verificar si el usuario está autenticado
 exports.isAuthenticated = async (req, res, next) => {
@@ -138,7 +141,8 @@ exports.login = async (req, res) => {
 
         // Inicio de sesión OK
         const id = userRecord.id;
-        const token = jwt.sign({ id }, JWT_SECRETO, {
+        const role = userRecord.role; // Obtener el rol del usuario desde la base de datos
+        const token = jwt.sign({ id, role }, JWT_SECRETO, {
             expiresIn: JWT_TIEMPO_EXPIRA
         });
 
@@ -149,6 +153,17 @@ exports.login = async (req, res) => {
             httpOnly: true
         };
         res.cookie('jwt', token, cookiesOptions);
+
+        // Redirigir según el rol del usuario
+        let redirectRoute = '';
+        if (role === 'admin') {
+            redirectRoute = 'pagos/registrar';
+        } else if (role === 'user') {
+            redirectRoute = `pagos/${id}`;
+        } else if (role === 'superuser') {
+            redirectRoute = 'superuser-dashboard';
+        }
+
         res.render('login', {
             alert: true,
             alertTitle: "Conexión exitosa",
@@ -156,7 +171,7 @@ exports.login = async (req, res) => {
             alertIcon: 'success',
             showConfirmButton: false,
             timer: 800,
-            ruta: ''
+            ruta: redirectRoute  // Redirigir a la ruta correspondiente según el rol
         });
     } catch (error) {
         console.log(error);
