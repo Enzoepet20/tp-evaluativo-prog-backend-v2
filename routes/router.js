@@ -59,7 +59,7 @@ router.get('/register', (req, res) => {
 
 router.get('/login', (req, res) => {
     const alertMessage = req.query.alert;
-    res.render('login', { alert: false });
+    res.render('login', { alert: false, alertMessage });
 });
 
 router.get('/edit/:id', authController.isAuthenticated, authController.getUserForEdit);
@@ -84,7 +84,7 @@ router.post('/register', upload.single('profileImage'), [
 // Rutas de pagos
 
 // Mostrar el formulario para registrar un pago
-router.get('/registrar-pago',authController.isAuthorized(['admin', 'superuser']), authController.isAuthenticated, (req, res) => {
+router.get('/registrar-pago', authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']),(req, res) => {
     res.render('register-payment', { user: req.user });
 });
 

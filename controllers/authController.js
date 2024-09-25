@@ -47,6 +47,7 @@ exports.isAuthorized = (roles) => {
         if (req.user && roles.includes(req.user.role)) {
             return next(); // Si el rol es correcto, permite continuar
         } else {
+            console.log('Acceso denegado, permisos oooooooo');
              return res.redirect('/login?alert=Acceso denegado, permisos insuficientes'); //quiero rederigirlo al login
         }
     };
