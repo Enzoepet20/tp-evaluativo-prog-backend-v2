@@ -40,7 +40,17 @@ exports.isAuthenticated = async (req, res, next) => {
         return res.redirect('/login');
     }
 };
-
+// Middleware para verificar el rol del usuario
+exports.isAuthorized = (roles) => {
+    return (req, res, next) => {
+        // Verifica si el usuario está autenticado y su rol está en los roles permitidos
+        if (req.user && roles.includes(req.user.role)) {
+            return next(); // Si el rol es correcto, permite continuar
+        } else {
+             return res.redirect('/login?alert=Acceso denegado, permisos insuficientes'); //quiero rederigirlo al login
+        }
+    };
+};
 
 // Metodo para mostrar la vista principal
 exports.show = async (req, res, next) => {
@@ -101,7 +111,7 @@ exports.register = async (req, res) => {
             profile_image: profileImageUrl
         });
 
-        res.redirect('/');
+        res.redirect('/login');
     } catch (error) {
         console.log(error);
         res.status(500).send('Error al registrar el usuario');
@@ -157,13 +167,13 @@ exports.login = async (req, res) => {
         // Redirigir según el rol del usuario
         let redirectRoute = '';
         if (role === 'admin') {
-            redirectRoute = 'pagos/registrar';
+            redirectRoute = 'registrar-pago';
         } else if (role === 'user') {
             redirectRoute = `pagos/${id}`;
         } else if (role === 'superuser') {
             redirectRoute = 'superuser-dashboard';
         }
-
+console.log("REDIRECT ROUTE: " + redirectRoute);
         res.render('login', {
             alert: true,
             alertTitle: "Conexión exitosa",
@@ -183,7 +193,7 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
     res.clearCookie('jwt');
-    return res.redirect('/');
+    return res.redirect('/login');
 };
 
 exports.edit = async (req, res) => {

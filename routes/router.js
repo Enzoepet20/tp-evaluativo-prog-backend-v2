@@ -34,7 +34,7 @@ const validateProfileImage = body('profileImage').custom((value, { req }) => {
 });
 
 // Ruta para la página principal
-router.get('/', authController.isAuthenticated, authController.show, (req, res) => {
+router.get('/', authController.isAuthenticated,authController.isAuthorized(['admin', 'superuser']), authController.show, (req, res) => {
     res.render('index', { user: req.user, users: req.users, pagos: req.pagos });
 });
 
@@ -46,7 +46,7 @@ router.get('/pagos/:id', authController.isAuthenticated, async (req, res) => {
             where: { userId: userId }, // Filtrar pagos por el ID del usuario
             attributes: ['id', 'amount', 'date', 'userId']
         });
-        res.render('index', { user: req.user, users: req.users, pagos });// Renderiza la vista con los pagos filtrados
+        res.render('pagos-user', { user: req.user, users: req.users, pagos });// Renderiza la vista con los pagos filtrados
     } catch (error) {
         console.log(error);
         res.status(500).send('Error al cargar los pagos');
@@ -58,6 +58,7 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
+    const alertMessage = req.query.alert;
     res.render('login', { alert: false });
 });
 
@@ -83,19 +84,19 @@ router.post('/register', upload.single('profileImage'), [
 // Rutas de pagos
 
 // Mostrar el formulario para registrar un pago
-router.get('/pagos/registrar', authController.isAuthenticated, (req, res) => {
+router.get('/registrar-pago',authController.isAuthorized(['admin', 'superuser']), authController.isAuthenticated, (req, res) => {
     res.render('register-payment', { user: req.user });
 });
 
 // Procesar el registro de pago
-router.post('/pagos/registrar', authController.isAuthenticated, async (req, res) => {
+router.post('/registrar-pago', authController.isAuthenticated, async (req, res) => {
     const { amount, date, userId } = req.body;
     try {
         if (!amount || !date || !userId) {
             return res.status(400).send('Todos los campos son obligatorios');
         }
         await Pago.create({ amount, date, userId });
-        res.redirect('/pagos');
+        res.redirect('/');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al registrar el pago');
@@ -103,8 +104,8 @@ router.post('/pagos/registrar', authController.isAuthenticated, async (req, res)
 });
 
 // Otras rutas
-router.post('/delete/:id', authController.delete);
-router.post('/edit/:id', validateController.uploadProfileImage, authController.edit);
+//router.post('/delete/:id', authController.delete);
+//router.post('/edit/:id', validateController.uploadProfileImage, authController.edit);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
