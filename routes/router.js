@@ -6,12 +6,13 @@ const multer = require('multer');
 const path = require('path');
 const authController = require('../controllers/authController');
 const validateController = require('../controllers/validateController');
+const reciboController = require('../controllers/reciboController');
 const { body, validationResult } = require('express-validator');
 
 // Configurar Multer para almacenar las imágenes
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/img/'); 
+        cb(null, 'uploads/'); 
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -102,6 +103,11 @@ router.post('/registrar-pago', authController.isAuthenticated, async (req, res) 
         res.status(500).send('Error al registrar el pago');
     }
 });
+
+// Rutas para manejar recibos
+router.get('/adjuntar-recibo', authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.showAdjuntarRecibo);
+router.post('/adjuntar-recibo', upload.single('recibo'), authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.adjuntarRecibo);
+
 
 // Otras rutas
 //router.post('/delete/:id', authController.delete);
