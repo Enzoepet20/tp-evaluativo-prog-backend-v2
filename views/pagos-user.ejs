@@ -198,8 +198,8 @@
                 <td><%= pago.date %></td>
                 <td><%= pago.userId %></td>
                 <td>
-                  <a href="" class="btn btn-primary">Descargar Recibo</a>
-                </td>
+                  <a href="<%= reciboMap[pago.id] %>" class="btn btn-primary">Descargar Recibo</a>
+              </td>
               </tr>
             <% }); %>
           </tbody>

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Pago = require('../models/Pago');
+const Recibo = require('../models/Recibo');
 const multer = require('multer');
 const path = require('path');
 const authController = require('../controllers/authController');
@@ -47,12 +48,27 @@ router.get('/pagos/:id', authController.isAuthenticated, async (req, res) => {
             where: { userId: userId }, // Filtrar pagos por el ID del usuario
             attributes: ['id', 'amount', 'date', 'userId']
         });
-        res.render('pagos-user', { user: req.user, users: req.users, pagos });// Renderiza la vista con los pagos filtrados
+
+        // Obtener los filePaths de los recibos
+        const recibos = await Recibo.findAll({
+            where: { pagoId: pagos.map(pago => pago.id) },
+            attributes: ['pagoId', 'filePath']
+        });
+
+        // Mapeamos los recibos para poder acceder a ellos fácilmente
+        const reciboMap = {};
+        recibos.forEach(recibo => {
+            reciboMap[recibo.pagoId] = recibo.filePath;
+        });
+
+        // Renderizar la vista con los pagos y sus recibos
+        res.render('pagos-user', { user: req.user, users: req.users, pagos, reciboMap });
     } catch (error) {
         console.log(error);
         res.status(500).send('Error al cargar los pagos');
     }
 });
+
 
 router.get('/register', (req, res) => {
     res.render('register', { validaciones: [] });
