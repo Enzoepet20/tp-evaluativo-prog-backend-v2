@@ -11,7 +11,7 @@ const methodOverride = require('method-override');
 const app = express()
 
 // Seteamos el motor de plantillas
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs');
 
 // Seteamos la carpeta public para archivos estáticos
 app.use(express.static('public'))

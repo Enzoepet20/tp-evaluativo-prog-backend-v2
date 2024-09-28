@@ -1,210 +1,231 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Custom">
     <title>Registro de Pagos</title>
-    
+
     <style>
-      /* Estilos generales */
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        margin: 0;
-        padding: 0;
-      }
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
 
-      header {
-        background-color: #0d6efd;
-        color: white;
-        padding: 10px 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
+        header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      .navbar-brand {
-        margin-left: 20px;
-        font-size: 1.25rem;
-        font-weight: bold;
-      }
+        .navbar-brand {
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin-left: 20px;
+        }
 
-      .btn-danger {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px 15px;
-        border-radius: 5px;
-        margin-right: 20px;
-        cursor: pointer;
-      }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin: 0 20px;
+            transition: background-color 0.3s;
+        }
 
-      .container-fluid {
-        display: flex;
-        padding: 20px;
-      }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
 
-      nav.sidebar {
-        background-color: #0d6efd;
-        padding: 20px;
-        color: white;
-        height: 100vh;
-      }
+        .container-fluid {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
 
-      nav ul {
-        list-style: none;
-        padding: 0;
-      }
+        nav.sidebar {
+            background-color: #0d6efd;
+            padding: 20px;
+            color: white;
+            height: 100vh;
+        }
 
-      nav li {
-        margin: 10px 0;
-      }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
 
-      nav a {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        display: block;
-        padding: 10px;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-      }
+        nav li {
+            margin: 10px 0;
+        }
 
-      nav a:hover {
-        background-color: #0056b3;
-      }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: block;
+        }
 
-      main {
-        flex: 1;
-        background-color: white;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-      }
+        nav a:hover {
+            background-color: #0056b3;
+        }
 
-      h2 {
-        margin: 0;
-        font-size: 1.5rem;
-        display: inline-block;
-      }
+        main {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      .badge {
-        font-size: 1rem;
-        padding: 10px;
-        border-radius: 10px;
-        color: white;
-        margin-left: 10px;
-      }
+        h2 {
+            margin: 0;
+            font-size: 1.75rem;
+        }
 
-      .badge.bg-success {
-        background-color: #198754;
-      }
+        .badge {
+            font-size: 1rem;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: white;
+            margin-left: 10px;
+        }
 
-      img {
-        max-width: 100px;
-        border-radius: 50%;
-      }
+        .badge.bg-success {
+            background-color: #198754;
+        }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
+        img {
+            max-width: 50px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
 
-      table th, table td {
-        padding: 10px;
-        text-align: left;
-        border-bottom: 1px solid #dee2e6;
-      }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden; /* Asegura que los bordes redondeados se muestren */
+        }
 
-      table th {
-        background-color: #f1f1f1;
-        font-weight: bold;
-      }
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
 
-      .btn.btn-primary {
-        background-color: #0d6efd;
-        color: white;
-        border: none;
-        padding: 5px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+        table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
 
-      .btn.btn-primary:hover {
-        background-color: #0056b3;
-      }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9; /* Fila alterna color */
+        }
 
-      .d-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+        table tr:hover {
+            background-color: #f1f1f1; /* Color al pasar el ratón */
+        }
 
-      .border-bottom {
-        border-bottom: 2px solid #dee2e6;
-        padding-bottom: 15px;
-      }
+        .btn.btn-primary {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn.btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .border-bottom {
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 15px;
+        }
     </style>
-  </head>
-  <body>
-    <header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">Beltran Enzo</a>
-      <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
+</head>
 
+<body>
+    <header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">Beltran Enzo</a>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap"></div>
         </div>
-      </div>
     </header>
 
     <div class="container-fluid">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
-        <div class="position-sticky pt-3">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a type="button" class="px-3 btn btn-danger" href="/login">Logout</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a type="button" class="px-3 btn btn-danger" href="/login">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h2>Dashboard</h2>
-          <h2>Bienvenido:
-            <% if (user) { %>
-              <span class="badge bg-success"><%= user.name %></span>
-              <img src="<%= user.profile_image %>" alt="Imagen de perfil">
-            <% } %>
-          </h2>
-        </div> 
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h2>Dashboard</h2>
+                <h2>Bienvenido:
+                    <% if (user) { %>
+                        <span class="badge bg-success"><%= user.name %></span>
+                        <img src="<%= user.profile_image %>" alt="Imagen de perfil">
+                    <% } %>
+                </h2>
+            </div>
 
-        <h3>LISTA DE PAGOS</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Monto</th>
-              <th>Fecha</th>
-              <th>Id Usuario</th>
-              <th>Recibo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% pagos.forEach(pago => { %>
-              <tr>
-                <td><%= pago.id %></td>
-                <td><%= pago.amount %></td>
-                <td><%= pago.date %></td>
-                <td><%= pago.userId %></td>
-                <td>
-                  <a href="<%= reciboMap[pago.id] %>" class="btn btn-primary">Descargar Recibo</a>
-              </td>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      </main>
+            <h3>LISTA DE PAGOS</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                        <th>Id Usuario</th>
+                        <th>Recibo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% pagos.forEach(pago => { %>
+                        <tr>
+                            <td><%= pago.id %></td>
+                            <td><%= pago.amount %></td>
+                            <td><%= pago.date %></td>
+                            <td><%= pago.userId %></td>
+                            <td>
+                                <a href="<%= pago.Recibo ? pago.Recibo.filePath : '#' %>" class="btn btn-primary">
+                                    <%= pago.Recibo ? 'Descargar Recibo' : 'No Disponible' %>
+                                </a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </main>
     </div>
-  </body>
+</body>
+
 </html>
