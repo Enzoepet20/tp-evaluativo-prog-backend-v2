@@ -8,33 +8,8 @@ const path = require('path');
 const authController = require('../controllers/authController');
 const validateController = require('../controllers/validateController');
 const reciboController = require('../controllers/reciboController');
+const pagoController = require('../controllers/pagoController');
 const { body, validationResult } = require('express-validator');
-
-// Configurar Multer para almacenar las imágenes
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); 
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-
-const upload = multer({ storage: storage });
-
-const imageFileExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-
-const validateProfileImage = body('profileImage').custom((value, { req }) => {
-    if (!req.file) {
-        throw new Error('No se ha subido ninguna imagen');
-    }
-    const fileExtension = req.file.mimetype.split('/')[1].toLowerCase();
-    if (!imageFileExtensions.includes(fileExtension)) {
-        throw new Error('Ingrese un formato de imagen válido');
-    }
-    return true;
-});
 
 // Ruta para la página principal
 router.get('/', authController.isAuthenticated,authController.isAuthorized(['admin', 'superuser']), authController.show, (req, res) => {
@@ -42,42 +17,7 @@ router.get('/', authController.isAuthenticated,authController.isAuthorized(['adm
 });
 
 // Supongamos que esta es tu ruta para mostrar los pagos del usuario específico
-router.get('/pagos/:id', authController.isAuthenticated, async (req, res) => {
-    try {
-        const userId = req.params.id; // Obtener el ID del usuario de la URL
-        const pagos = await Pago.findAll({
-            where: { userId: userId }, // Filtrar pagos por el ID del usuario
-            attributes: ['id', 'amount', 'date', 'userId']
-        });
-
-        // Verificar si hay pagos
-        if (!pagos.length) {
-            return res.render('pagos-user', { user: req.user, users: req.users, pagos: [], reciboMap: {} });
-        }
-
-        // Obtener los filePaths de los recibos
-        const recibos = await Recibo.findAll({
-            where: { pagoId: pagos.map(pago => pago.id) },
-            attributes: ['pagoId', 'filePath']
-        });
-
-        // Mapeamos los recibos para poder acceder a ellos fácilmente
-        const reciboMap = {};
-        recibos.forEach(recibo => {
-            reciboMap[recibo.pagoId] = recibo.filePath;
-        });
-
-        // Log para verificar el contenido de reciboMap
-        console.log('Recibo Map:', reciboMap);
-
-        // Renderizar la vista con los pagos y sus recibos
-        res.render('pagos-user', { user: req.user, users: req.users, pagos, reciboMap });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Error al cargar los pagos');
-    }
-});
-
+router.get('/pagos/:id', authController.isAuthenticated, pagoController.getPagos);
 
 
 router.get('/register', (req, res) => {
@@ -92,11 +32,11 @@ router.get('/login', (req, res) => {
 router.get('/edit/:id', authController.isAuthenticated, authController.getUserForEdit);
 
 // Ruta para registrar usuarios
-router.post('/register', upload.single('profileImage'), [
+router.post('/register', validateController.upload.single('profileImage'), [
     body('name').exists().isLength({ min: 5 }),
     body('correo').exists().isEmail(),
     body('pass').exists().isNumeric(),
-    validateProfileImage
+    validateController.validateProfileImage
 ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -116,23 +56,25 @@ router.get('/registrar-pago', authController.isAuthenticated, authController.isA
 });
 
 // Procesar el registro de pago
-router.post('/registrar-pago', authController.isAuthenticated, async (req, res) => {
-    const { amount, date, userId } = req.body;
-    try {
-        if (!amount || !date || !userId) {
-            return res.status(400).send('Todos los campos son obligatorios');
-        }
-        await Pago.create({ amount, date, userId });
-        res.redirect('/');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al registrar el pago');
-    }
-});
-
+router.post('/registrar-pago', authController.isAuthenticated, pagoController.registrarPago);
 // Rutas para manejar recibos
 router.get('/adjuntar-recibo', authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.showAdjuntarRecibo);
-router.post('/adjuntar-recibo', reciboController.uploadRecibo, authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.adjuntarRecibo);
+router.post('/adjuntar-recibo', (req, res, next) => {
+    reciboController.uploadRecibo(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            // Un error de Multer ocurrió cuando subiendo el archivo
+            return res.status(400).send(err.message);
+        } else if (err) {
+            // Ocurrió un error distinto a Multer
+            return res.status(400).send(err.message);
+        }
+        // Si no hubo error, procede con la siguiente función en la cadena
+        next();
+    });
+}, 
+authController.isAuthenticated, 
+authController.isAuthorized(['admin', 'superuser']), 
+reciboController.adjuntarRecibo);
 
 
 // Otras rutas

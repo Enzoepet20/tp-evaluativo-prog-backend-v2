@@ -13,7 +13,21 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+// Función de filtro para aceptar solo archivos PDF
+const fileFilter = (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext === '.pdf') {
+        cb(null, true); // Aceptar el archivo
+    } else {
+        cb(new Error('Solo se permiten archivos PDF'), false); // Rechazar el archivo
+    }
+};
+
+// Configurar Multer con almacenamiento y filtro de archivos
+const upload = multer({ 
+    storage: storage,
+    fileFilter: fileFilter // Añadir el filtro para permitir solo PDFs
+});
 
 // Mostrar el formulario para adjuntar recibo
 exports.showAdjuntarRecibo = async (req, res) => {
@@ -50,5 +64,5 @@ exports.adjuntarRecibo = async (req, res) => {
     }
 };
 
-
+// Middleware para subir un único archivo de recibo
 exports.uploadRecibo = upload.single('recibo');
