@@ -6,7 +6,7 @@ const path = require('path');
 // Configurar Multer para almacenar los archivos PDF
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/uploads/recibos'); // Carpeta donde se almacenarán los recibos
+        cb(null, 'uploads/recibos/'); 
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -49,3 +49,6 @@ exports.adjuntarRecibo = async (req, res) => {
         res.status(500).send('Error al adjuntar el recibo');
     }
 };
+
+
+exports.uploadRecibo = upload.single('recibo');

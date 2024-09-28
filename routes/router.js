@@ -19,18 +19,9 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
-const storageRecibo = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/recibos/'); 
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
+
 
 const upload = multer({ storage: storage });
-
-const uploadRecibo = multer({ storage: storageRecibo });
 
 const imageFileExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -141,7 +132,7 @@ router.post('/registrar-pago', authController.isAuthenticated, async (req, res) 
 
 // Rutas para manejar recibos
 router.get('/adjuntar-recibo', authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.showAdjuntarRecibo);
-router.post('/adjuntar-recibo', uploadRecibo.single('recibo'), authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.adjuntarRecibo);
+router.post('/adjuntar-recibo', reciboController.uploadRecibo, authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.adjuntarRecibo);
 
 
 // Otras rutas
