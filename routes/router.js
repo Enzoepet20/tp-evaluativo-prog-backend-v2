@@ -19,8 +19,18 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
+const storageRecibo = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/recibos/'); 
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
 
 const upload = multer({ storage: storage });
+
+const uploadRecibo = multer({ storage: storageRecibo });
 
 const imageFileExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -49,6 +59,11 @@ router.get('/pagos/:id', authController.isAuthenticated, async (req, res) => {
             attributes: ['id', 'amount', 'date', 'userId']
         });
 
+        // Verificar si hay pagos
+        if (!pagos.length) {
+            return res.render('pagos-user', { user: req.user, users: req.users, pagos: [], reciboMap: {} });
+        }
+
         // Obtener los filePaths de los recibos
         const recibos = await Recibo.findAll({
             where: { pagoId: pagos.map(pago => pago.id) },
@@ -61,6 +76,9 @@ router.get('/pagos/:id', authController.isAuthenticated, async (req, res) => {
             reciboMap[recibo.pagoId] = recibo.filePath;
         });
 
+        // Log para verificar el contenido de reciboMap
+        console.log('Recibo Map:', reciboMap);
+
         // Renderizar la vista con los pagos y sus recibos
         res.render('pagos-user', { user: req.user, users: req.users, pagos, reciboMap });
     } catch (error) {
@@ -68,6 +86,7 @@ router.get('/pagos/:id', authController.isAuthenticated, async (req, res) => {
         res.status(500).send('Error al cargar los pagos');
     }
 });
+
 
 
 router.get('/register', (req, res) => {
@@ -122,7 +141,7 @@ router.post('/registrar-pago', authController.isAuthenticated, async (req, res) 
 
 // Rutas para manejar recibos
 router.get('/adjuntar-recibo', authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.showAdjuntarRecibo);
-router.post('/adjuntar-recibo', upload.single('recibo'), authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.adjuntarRecibo);
+router.post('/adjuntar-recibo', uploadRecibo.single('recibo'), authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), reciboController.adjuntarRecibo);
 
 
 // Otras rutas

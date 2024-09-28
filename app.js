@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path');
 const model = {};
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
@@ -15,6 +16,7 @@ app.set('view engine', 'ejs');
 
 // Seteamos la carpeta public para archivos estáticos
 app.use(express.static('public'))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Para procesar datos enviados desde forms
 app.use(express.urlencoded({ extended: true }))

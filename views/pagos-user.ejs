@@ -211,17 +211,20 @@
                 <tbody>
                     <% pagos.forEach(pago => { %>
                         <tr>
-                            <td><%= pago.id %></td>
-                            <td><%= pago.amount %></td>
-                            <td><%= pago.date %></td>
-                            <td><%= pago.userId %></td>
-                            <td>
-                                <a href="<%= pago.Recibo ? pago.Recibo.filePath : '#' %>" class="btn btn-primary">
-                                    <%= pago.Recibo ? 'Descargar Recibo' : 'No Disponible' %>
-                                </a>
-                            </td>
+                          <td><%= pago.id %></td>
+                          <td><%= pago.amount %></td>
+                          <td><%= pago.date %></td>
+                          <td><%= pago.userId %></td>
+                          <td>
+                            <% if (reciboMap[pago.id]) { %>
+                              <a href="<%= reciboMap[pago.id] %>" class="btn btn-primary">Descargar Recibo</a>
+                            <% } else { %>
+                              <span>No Disponible</span>
+                            <% } %>
+                          </td>
                         </tr>
-                    <% }); %>
+                      <% }); %>
+                      
                 </tbody>
             </table>
         </main>
