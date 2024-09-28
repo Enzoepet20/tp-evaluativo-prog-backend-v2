@@ -69,35 +69,73 @@
       </div> 
 
       <!-- Sección para mostrar la lista de usuarios -->
-<H3>LISTA DE PAGOS</H3>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Monto</th>
-      <th scope="col">Fecha</th>
-      <th scope="col">Id Usuario</th>
-      <th scope="col">Recibo</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% pagos.forEach(pago => { %>
-      <tr>
-        <td><%= pago.id %></td>
-        <td><%= pago.amount %></td>
-        <td><%= pago.date %></td>
-        <td><%= pago.userId %></td>
-        <td>
-          <a href="/adjuntar-recibo" class="btn btn-primary">Adjuntar Recibo</a> <!-- Botón de descarga -->
-        </td>
-      </tr>
-    <% }); %>
-  </tbody>
-</table>
+      <h3>LISTA DE PAGOS</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Monto</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Id Usuario</th>
+            <th scope="col">Recibo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pagos.forEach(pago => { %>
+            <tr>
+              <td><%= pago.id %></td>
+              <td><%= pago.amount %></td>
+              <td><%= pago.date %></td>
+              <td><%= pago.userId %></td>
+              <td>
+                <a href="/adjuntar-recibo" class="btn btn-primary">Adjuntar Recibo</a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
-    <script src="dashboard.js"></script>
-  </body>
+      <!-- Paginador -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">&laquo;</span>
+            </li>
+          <% } %>
+
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+            </li>
+          <% } %>
+
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link">&raquo;</span>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+      <script src="dashboard.js"></script>
+    </main>
+  </div>
+</div>
+</body>
 </html>

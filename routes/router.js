@@ -11,13 +11,12 @@ const reciboController = require('../controllers/reciboController');
 const pagoController = require('../controllers/pagoController');
 const { body, validationResult } = require('express-validator');
 
-// Ruta para la página principal
-router.get('/', authController.isAuthenticated,authController.isAuthorized(['admin', 'superuser']), authController.show, (req, res) => {
-    res.render('index', { user: req.user, users: req.users, pagos: req.pagos });
-});
+// Ruta para listar los pagos con paginación
+router.get('/', authController.isAuthenticated, authController.isAuthorized(['admin', 'superuser']), pagoController.obtenerPagos);
+
 
 // Supongamos que esta es tu ruta para mostrar los pagos del usuario específico
-router.get('/pagos/:id', authController.isAuthenticated, pagoController.getPagos);
+router.get('/pagos/:id', authController.isAuthenticated, pagoController.getPagos) ;
 
 
 router.get('/register', (req, res) => {
