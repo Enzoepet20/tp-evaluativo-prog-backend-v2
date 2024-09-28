@@ -12,7 +12,10 @@ const methodOverride = require('method-override');
 const app = express()
 
 // Seteamos el motor de plantillas
+// Configurar el motor de vistas (si es EJS, por ejemplo)
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 
 // Seteamos la carpeta public para archivos estáticos
 app.use(express.static('public'))
