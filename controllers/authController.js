@@ -47,11 +47,18 @@ exports.isAuthorized = (roles) => {
         if (req.user && roles.includes(req.user.role)) {
             return next(); // Si el rol es correcto, permite continuar
         } else {
-            console.log('Acceso denegado, permisos oooooooo');
-             return res.redirect('/login?alert=Acceso denegado, permisos insuficientes'); //quiero rederigirlo al login
+            console.log('Acceso denegado, permisos insuficientes');
+
+            // Redirige según el rol del usuario
+            if (req.user && req.user.role === 'admin') {
+                return res.redirect('/'); // Redirige a la página principal si es admin
+            } else {
+                return res.redirect('/login?alert=Acceso denegado, permisos insuficientes'); // Redirige al login si es user
+            }
         }
     };
 };
+
 
 // Metodo para mostrar la vista principal
 exports.show = async (req, res, next) => {
@@ -172,7 +179,7 @@ exports.login = async (req, res) => {
         } else if (role === 'user') {
             redirectRoute = `pagos/${id}`;
         } else if (role === 'superuser') {
-            redirectRoute = 'superuser-dashboard';
+            redirectRoute = 'register-admin';
         }
 console.log("REDIRECT ROUTE: " + redirectRoute);
         res.render('login', {
@@ -231,3 +238,4 @@ exports.delete = async (req, res) => {
         res.status(500).send('Error al borrar el usuario');
     }
 }
+

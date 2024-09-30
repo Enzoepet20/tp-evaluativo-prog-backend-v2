@@ -9,6 +9,7 @@ const authController = require('../controllers/authController');
 const validateController = require('../controllers/validateController');
 const reciboController = require('../controllers/reciboController');
 const pagoController = require('../controllers/pagoController');
+const superuserController = require('../controllers/superuserController');
 const { body, validationResult } = require('express-validator');
 
 // Ruta para listar los pagos con paginación
@@ -81,5 +82,8 @@ reciboController.adjuntarRecibo);
 //router.post('/edit/:id', validateController.uploadProfileImage, authController.edit);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
+
+router.get('/register-admin', authController.isAuthenticated, authController.isAuthorized([ 'superuser']), superuserController.renderRegisterForm);
+router.post('/register-admin', authController.isAuthenticated, authController.isAuthorized([ 'superuser']),validateController.upload.single('profileImage') ,superuserController.registerUser);
 
 module.exports = router;
