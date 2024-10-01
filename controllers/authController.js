@@ -206,25 +206,31 @@ exports.logout = (req, res) => {
 
 exports.edit = async (req, res) => {
     try {
-        const { name, correo } = req.body;
+        const { name, correo, role } = req.body;
         const user = await User.findByPk(req.params.id);
+        
         if (!user) {
             return res.status(404).send('Usuario no encontrado');
         }
 
-        user.name = name || user.name;
-        user.correo = correo || user.correo;
+        // Actualiza los campos del usuario
+        user.name = name !== undefined ? name : user.name; // Solo actualiza si se proporciona un nuevo valor
+        user.correo = correo !== undefined ? correo : user.correo; // Solo actualiza si se proporciona un nuevo valor
+        user.role = role !== undefined ? role : user.role; // Solo actualiza si se proporciona un nuevo valor
+
+        // Maneja la imagen de perfil si se proporciona
         if (req.file) {
             user.profile_image = `/uploads/${req.file.filename}`;
         }
 
+        // Guarda los cambios en la base de datos
         await user.save();
-        res.redirect('/');
+        res.redirect('/users-list'); // Redirige a la lista de usuarios o a donde desees
     } catch (error) {
-        console.log(error);
+        console.log('Error al editar el usuario:', error);
         res.status(500).send('Error al editar el usuario');
     }
-}
+};
 exports.delete = async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);

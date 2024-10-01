@@ -76,10 +76,14 @@ authController.isAuthenticated,
 authController.isAuthorized(['admin', 'superuser']), 
 reciboController.adjuntarRecibo);
 
+router.get('/users-list', authController.isAuthenticated, authController.isAuthorized([ 'superuser']), superuserController.getUsersList);
+
+router.post('/users-list', authController.isAuthenticated, authController.isAuthorized([ 'superuser']), validateController.upload.single('profileImage'),superuserController.getUsersList);
 
 // Otras rutas
-//router.post('/delete/:id', authController.delete);
-//router.post('/edit/:id', validateController.uploadProfileImage, authController.edit);
+router.get('/edit/:id',authController.isAuthenticated ,validateController.validateProfileImage, authController.getUserForEdit);
+router.post('/delete/:id', authController.delete);
+router.post('/edit/:id', validateController.validateProfileImage, authController.edit);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 

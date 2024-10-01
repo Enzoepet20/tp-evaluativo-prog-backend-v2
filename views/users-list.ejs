@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <title>Lista de Usuarios</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 shadow-lg p-3 mb-5">
+        <div class="card border-primary">
+          <div class="card-header bg-primary text-white">Lista de Usuarios</div>
+          <div class="card-body">
+            <table class="table table-bordered table-hover">
+              <thead class="bg-primary text-white">
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Usuario</th>
+                  <th>Correo</th>
+                  <th>Rol</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (users && users.length > 0) { %>
+                  <% users.forEach((user, index) => { %>
+                    <tr>
+                      <td><%= index + 1 %></td>
+                      <td><%= user.name %></td>
+                      <td><%= user.user %></td>
+                      <td><%= user.correo %></td>
+                      <td><%= user.role %></td>
+                      <td>
+                        <a href="/edit/<%= user.id %>" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="/delete/<%= user.id %>" method="POST" style="display: inline;">
+                          <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="6" class="text-center">No hay usuarios registrados.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

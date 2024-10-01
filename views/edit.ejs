@@ -24,9 +24,19 @@
             </div>
 
             <div class="mb-3">
+                <input type="radio" id="roleUser" name="role" value="user" checked>
+                <label for="roleUser">Usuario</label>
+                <input type="radio" id="roleAdmin" name="role" value="admin">
+                <label for="roleAdmin">Admin</label>
+                <input type="radio" id="roleSuperuser" name="role" value="superuser">
+                <label for="roleSuperuser">Superuser</label>
+              </div>
+
+            <div class="mb-3">
                 <label for="profileImage" class="form-label">Imagen de perfil:</label>
                 <input type="file" class="form-control" id="profileImage" name="profileImage">
             </div>
+
 
             <button type="submit" class="btn btn-primary w-100">Guardar cambios</button>
         </form>

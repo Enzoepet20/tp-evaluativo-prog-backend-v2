@@ -38,5 +38,18 @@ exports.registerUser = async (req, res) => {
         res.status(500).send('Error al registrar el usuario ');
     }       
 };
-
+exports.getUsersList = async (req, res) => {
+    try {
+      // Obtiene todos los usuarios de la base de datos
+      const users = await User.findAll({
+        attributes: ['id', 'name', 'user', 'correo', 'role']
+      });
+  
+      // Renderiza la vista 'users-list' y pasa los usuarios obtenidos
+      res.render('users-list', { users });
+    } catch (error) {
+      console.log('Error al obtener la lista de usuarios:', error);
+      res.status(500).send('Error al cargar la lista de usuarios');
+    }
+  };
 
