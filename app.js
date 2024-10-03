@@ -43,7 +43,7 @@ app.use(function(req, res, next) {
 });
 
 // Sincronización de la base de datos
-db.sync({ force: false})
+db.sync({ force: true})
   .then(() => {
     console.log('Base de datos sincronizada');
     // Inicia el servidor solo después de que la base de datos esté sincronizada

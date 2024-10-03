@@ -2,13 +2,15 @@ require("dotenv").config();
 var sequelize = require("sequelize");
 
 var db = new sequelize(
-    'tp_evaluativo_prog_backend_2', // Reemplaza con el nombre de tu base de datos
-    'pma', // Reemplaza con tu usuario de base de datos
-    '1234', // Reemplaza con tu contraseña
+    'tp_evaluativo_prog_backend_renacido', // Nombre de la base de datos
+    'root', // Usuario predeterminado de XAMPP
+    '', // La contraseña predeterminada de XAMPP es vacía
     {
         dialect: "mysql",
-        host: 'localhost', // Reemplaza con el host de tu base de datos
-        port: 3307, // Reemplaza con el puerto de tu base de datos si es diferente al predeterminado
+        host: 'localhost', // Host predeterminado
+        port: 3306, // Puerto predeterminado para MySQL
     }
 );
+
 module.exports = db;
+
